@@ -1,6 +1,6 @@
 # Train-Scheduler
 
-[Click me to Schedule your train]()
+[Click me to Schedule your train]( https://legines.github.io/Train-Scheduler/)
 
 #### Created using: 
    * HTML 
