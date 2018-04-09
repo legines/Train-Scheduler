@@ -2,7 +2,10 @@
 
 [Click me to Schedule your train]()
 
-####Created using HTML, JavaScript, Firebase
+#### Created using: 
+    * HTML 
+    * JavaScript 
+    * Firebase
 
 1. When adding trains the following can be submitted: 
     * Train Name
