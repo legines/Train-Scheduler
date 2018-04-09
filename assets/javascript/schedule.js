@@ -23,7 +23,7 @@ $(document).ready(function () {
     var trainTime = $("#trainTime").val().trim();
     var frequency = $("#frequency").val().trim();
 
-    // Code for handling the push
+    // Pushes train data onto Firebase
     database.ref().push({
       trainName: trainName,
       destination: destination,
@@ -33,7 +33,7 @@ $(document).ready(function () {
   });
 
 
-  // Firebase watcher + initial loader HINT: This code behaves similarly to .on("value")
+  // Firebase watcher + initial loader
   database.ref().on("child_added", function (childSnapshot) {
 
     var newTrainName = childSnapshot.val().trainName;
@@ -41,38 +41,37 @@ $(document).ready(function () {
     var newtrainTime = childSnapshot.val().trainTime;
     var newFrequency = childSnapshot.val().frequency;
 
-    // First Time (pushed back 1 year to make sure it comes before current time)
-    var startTimeConverted = moment(newtrainTime, "hh:mm").subtract(1, "years");
+    // First Train time captures and converted
+    var startTime = moment(newtrainTime, "hh:mm").subtract(1, "years");
 
-    // Current Time
+    // Current Time calculator
     var currentTime = moment();
 
     // Difference between the times
-    var diffTime = moment().diff(moment(startTimeConverted), "minutes");
+    var timeDiff = moment().diff(moment(startTime), "minutes");
 
-    // Time apart (remainder)
-    var tRemainder = diffTime % newFrequency;
+    // Remainder used for Minutes Away
+    var timeRemainder = timeDiff % newFrequency;
 
-    // Minute(s) Until Train
-    var tMinutesTillTrain = newFrequency - tRemainder;
+    // Minutes away calc
+    var minutesAway = newFrequency - timeRemainder;
 
-    // Next Train
-    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-    var catchTrain = moment(nextTrain).format("HH:mm");
+    // Next trian arrival calc
+    var nextTrain = moment().add(minutesAway, "minutes");
+    var nextArrival = moment(nextTrain).format("HH:mm");
 
-    // Display On Page
-    $("#all-display").append(
+    // Adds new trains and their info to page
+    $("#schedule").append(
       ' <tr><td>' + newTrainName +
       ' </td><td>' + newDestination +
       ' </td><td>' + newFrequency +
-      ' </td><td>' + catchTrain +
-      ' </td><td>' + tMinutesTillTrain + ' </td></tr>');
+      ' </td><td>' + nextArrival +
+      ' </td><td>' + minutesAway + ' </td></tr>');
 
-    // Clear input fields
+    // Clear all input
     $("#trainName, #destination, #trainTime, #frequency").val("");
     return false;
   },
-    //Handle the errors
     function (errorObject) {
       console.log("Errors handled: " + errorObject.code);
     });
